@@ -1,0 +1,14 @@
+.board-background{
+    background-color: blue; 
+    width: 500px; 
+    height: 500px; 
+    display: grid; 
+    grid-template-columns: repeat(50, 10px); 
+    grid-template-rows: repeat(50, 10px); 
+    grid-gap: 0;
+}
+
+.board-cell{
+    width: 10px;
+    height: 10px;
+}

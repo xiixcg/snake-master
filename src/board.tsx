@@ -3,7 +3,7 @@ import './App.css';
 
 const Board: React.FC = () => {
   return (
-    <div>
+    <div className='board-background'>
       Board
     </div>
   );
