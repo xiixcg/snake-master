@@ -1,14 +1,41 @@
+/* variables */
+$boardSize: 500px;
+$cellSize: 10px;
+
 .board-background{
     background-color: blue; 
-    width: 500px; 
-    height: 500px; 
+    width: $boardSize; 
+    height: $boardSize; 
     display: grid; 
-    grid-template-columns: repeat(50, 10px); 
-    grid-template-rows: repeat(50, 10px); 
+    grid-template-columns: repeat($boardSize/$cellSize, $cellSize); 
+    grid-template-rows: repeat($boardSize/$cellSize, $cellSize); 
     grid-gap: 0;
+    /*Customization*/
+    margin: 50px auto;
+    
 }
 
 .board-cell{
-    width: 10px;
-    height: 10px;
+    background-color: grey;
+    width: $cellSize;
+    height: $cellSize;
+    border: #aaaaaa .5px solid
+}
+
+.snake-head{
+    color: rgb(16, 128, 109);
+    width: $cellSize;
+    height: $cellSize;
+}
+
+.snake-tail{
+    color: rgb(6, 204, 178);    
+    width: $cellSize;
+    height: $cellSize;
+}
+
+.food{
+    color: rgb(151, 1, 1);
+    width: $cellSize;
+    height: $cellSize;
 }
