@@ -6,10 +6,14 @@ interface Coordinates {
 }
 
 const Board = () => {
+  //set react state
   const [grid, setGrid] = useState<Coordinates[][]>()
   const [snakeHead, setSnakeHead] = useState<Coordinates>({row:5, col:10})
   const [snakeTail, setSnakeTail] = useState<Coordinates[]>([{row:5, col:9},{row:5, col:8},{row:5, col:7}])
+  const [food, setFood] = useState<Coordinates>({row:-1, col:-1})
+  
   useEffect(() => {initGrid()}, [])
+  useEffect(() => {placeFood()}, [])
     
   const initGrid = () => {
     const grid = []; 
@@ -36,20 +40,32 @@ const Board = () => {
   }
 
   const getObjectStyleInCell = (row: number, col: number): string => {   
-    //Find Snake head location
-    if (snakeHead.row === row && snakeHead.col === col){
+    //Find snake head location
+    if (isObjectInCell(snakeHead, row, col)){
       return 'snake-head'
     }    
 
+    //Find food location
+    if (isObjectInCell(food, row, col)){
+      console.log("Food")
+      return 'food'
+    }
+
     //Find snake tail location
-    //todo: make if (snakeTail.includes) work
-    for(let i = 0; i < snakeTail.length; i++){
-      if (snakeTail[i].row === row && snakeTail[i].col === col){
-        return 'snake-tail'
-      }
-    }  
+    //todo: make if (snakeTail.includes) work   
+    if (snakeTail.find((tail) => {return isObjectInCell(tail, row, col)})){
+      return 'snake-tail'
+    }
 
     return 'cell'
+  }
+
+  const isObjectInCell = (coordinate: Coordinates, row: number, col: number): boolean => {
+    return coordinate.row === row && coordinate.col === col
+  }
+
+  const placeFood = () => {
+    setFood({row: Math.floor(Math.random() * 50), col: Math.floor(Math.random() * 50)}) 
   }
 
   return <div className='board-background'>{grid && drawGrid()}</div>
