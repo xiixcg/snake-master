@@ -31,10 +31,15 @@ export const Board = () => {
   const[tick, setTick] = useState<number>(0)
   const[snakeVelocity, setSnakeVelocity] = useState<Velocity>({rowV: 0, colV: 0})
   const[direction, setDirection] = useState<snakeDirection>(snakeDirection.right)
-
-  
+  const[lost, setLost] = useState<boolean>(false)
+  const[pause, setPause] = useState<boolean>(false)
+  const[reset, setReset] = useState<boolean>(false)
+  const[score, setScore] = useState<number>(0)  
 
   useEffect(() => {
+    if(reset){
+      resetAll()
+    }
     initGrid()
     placeFood()   
 
@@ -48,12 +53,24 @@ export const Board = () => {
       document.removeEventListener('keydown', onKeyDown); 
       window.clearInterval(timer); 
     }
-  }, [])  // eslint-disable-line react-hooks/exhaustive-deps
+  }, [reset])  // eslint-disable-line react-hooks/exhaustive-deps
   
   useEffect(() => {
-    moveSnake()
     gameLogic()
-  }, [tick])  
+    if (!pause){
+      moveSnake()
+    }
+  }, [tick])  // eslint-disable-line react-hooks/exhaustive-deps
+
+  const resetAll = () =>{
+    setSnakeHead({row: 5, col: 10}) 
+    setSnakeTail([{row: 5, col: 9}, {row: 5, col: 8}, {row: 5, col: 7}]) 
+    setLost(false) 
+    setSnakeVelocity({rowV: 0, colV: 0}) 
+    setTick(0)
+    setReset(false)
+    setScore(0)
+  }
     
   const initGrid = () => {
     const grid = []; 
@@ -108,6 +125,12 @@ export const Board = () => {
   }  
 
   const onKeyDown = (event: KeyboardEvent) => {
+    
+    console.log(pause)
+    if (pause){
+      return
+    }
+    //Handle key press when snake is not paused
     switch(event.keyCode){
         case 37:
         case 100:
@@ -138,6 +161,7 @@ export const Board = () => {
           }
           break
     }
+    console.log(snakeVelocity)
   }
 
   const moveSnake = () => {
@@ -152,7 +176,6 @@ export const Board = () => {
         else if (isOnLastTail(i)){  //Last tail only need to be added when food was eaten
           if (isFoodEaten()){
             newTail.push(snakeTail[i])
-            placeFood()
           }
         }
         else{
@@ -182,14 +205,20 @@ export const Board = () => {
   }  
 
   const gameLogic = () => {
-    if (isFoodEaten()){
-      // placeFood()
+    if (isFoodEaten()){     
+      placeFood()
+      setScore(score + 100)
     }
     else if (isWallHit()){
       console.log('You hit the wall')
+      setLost(true)
     }
     else if (isTailHit()){
       console.log('You hit the tail')
+      setLost(true)
+    }
+    else if (pause){
+      setSnakeVelocity({rowV: 0, colV: 0})
     }
   }
 
@@ -200,9 +229,47 @@ export const Board = () => {
   const isTailHit = () => {
     return snakeTail.find((tail) => {return isObjectInCell(tail, snakeHead.row, snakeHead.col)})
   }
+
+  const drawSnakeBoard = () => {
+    return (
+      <div className='snake-board-background'>
+        { lost === false ? grid && drawGrid() : drawLost()}
+      </div>
+    )  
+  }
+
+  const drawLost = () => {
+    return <div className='board-lost'>Game Lost</div>
+  }
+
+  const drawScoreBoard = () => {
+    return (
+      <div className='score-board'>{`Score: ${score}`}</div>
+    )
+  }
+
+  const drawButtons = () => {
+    return (
+      <div className='button-board'>
+        <button className='button' onClick={() => setPause(!pause) }>
+          Pause
+        </button>
+        <button className='button' onClick={() => setReset(true)}>
+          Reset
+        </button>
+      </div>
+    )
+  }
  
-  return <div className='board-background'>{grid && drawGrid()}</div>
+  return (    
+    <div className='game-board'>
+      {drawScoreBoard()} 
+      {drawSnakeBoard()}
+      {drawButtons()}
+    </div>
+  )  
 }
+
 
 export default Board;
 

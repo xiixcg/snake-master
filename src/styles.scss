@@ -1,18 +1,43 @@
 /* variables */
 $boardSize: 500px;
+$scoreBoardHeight: $boardSize/10;
+$buttonBoardHeight: $boardSize/10;
 $cellSize: 10px;
 
-.board-background{
+.game-board{
+    background-color: rgba(255, 255, 255, 0.9);
+    width: $boardSize;
+    height: $boardSize + $scoreBoardHeight + $buttonBoardHeight;
+    margin: 0 auto;
+}
+
+.score-board{
+    background-color: black;
+    color: yellow;
+    width: $boardSize;
+    height: $scoreBoardHeight;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.snake-board-background{
     background-color: rgb(190, 190, 190); 
     width: $boardSize; 
     height: $boardSize; 
     display: grid; 
     grid-template-columns: repeat($boardSize/$cellSize, $cellSize); 
     grid-template-rows: repeat($boardSize/$cellSize, $cellSize); 
-    grid-gap: 0;
-    /*Customization*/
-    margin: 50px auto;
-    
+    grid-gap: 0;    
+}
+
+.board-lost{
+    width: $boardSize;
+    height: $boardSize;
+    color: rgb(122, 122, 100);
+    text-align: center;
+    padding-top: $boardSize/10*4;
+    font-size: $boardSize/10;
 }
 
 .cell{
@@ -38,4 +63,16 @@ $cellSize: 10px;
     background-color: rgb(151, 1, 1);
     width: $cellSize;
     height: $cellSize;
+}
+
+.button-board{
+    background-color: black;
+    width: $boardSize;
+    height: $buttonBoardHeight;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+.button{
+    margin: $buttonBoardHeight/5;
 }

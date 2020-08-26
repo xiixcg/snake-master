@@ -4,7 +4,6 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 import './styles.scss';
 import Board from './board';
-import Game from './game';
 
 ReactDOM.render(<Board />, document.getElementById('root'));
 
