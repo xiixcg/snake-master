@@ -1,5 +1,8 @@
 /* variables */
 //size variable
+:export{
+    
+}
 $boardSize: 500px;
 $scoreBoardHeight: 50px;
 $buttonBoardHeight: 50px;
@@ -107,4 +110,10 @@ $buttonHoverColor: $snakeTailColor;
 
 .button:hover{
     background-color: $buttonHoverColor;
+}
+
+.setting-lists{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 }

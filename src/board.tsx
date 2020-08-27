@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react'
 
+import PopupWindow from './settings.js'
+
 interface Coordinates {
   row: number
   col: number
@@ -17,15 +19,14 @@ enum Direction{
   down
 }
 
-let gameWidth = 50
-let gameHeight = 50
-
 export const Board = () => {
   //set react state
   const [grid, setGrid] = useState<Coordinates[][]>()
   const [snakeHead, setSnakeHead] = useState<Coordinates>({row:5, col: 10})
   const [snakeTail, setSnakeTail] = useState<Coordinates[]>([{row:5, col:9},{row:5, col:8},{row:5, col:7}])
   const [food, setFood] = useState<Coordinates>({row:-1, col:-1})
+
+  const [gameBoardSize, setGameBoardSize] = useState<number>(50)
 
   const[tick, setTick] = useState<number>(0)
   const[snakeVelocity, setSnakeVelocity] = useState<Velocity>({rowV: 0, colV: 0})
@@ -46,9 +47,8 @@ export const Board = () => {
     placeFood()      
   }, [reset])  // eslint-disable-line react-hooks/exhaustive-deps
   
-  useEffect(() => {    
+  useEffect(() => {   
     gameLogic()
-    console.log(snakeDirection)
     if (!pause){
       moveSnake()
     }
@@ -88,9 +88,9 @@ export const Board = () => {
 //#region Board Setup
   const initGrid = () => {
     const grid = []
-    for (let row = 0; row < gameHeight; row++) { 
+    for (let row = 0; row < gameBoardSize; row++) { 
       const cols = []
-      for (let col = 0; col < gameWidth; col++) { 
+      for (let col = 0; col < gameBoardSize; col++) { 
         cols.push({row, col})
       } 
       grid.push(cols)
@@ -135,7 +135,7 @@ export const Board = () => {
   }
 
   const placeFood = () => {
-    setFood({row: Math.floor(Math.random() * gameWidth), col: Math.floor(Math.random() * gameHeight)}) 
+    setFood({row: Math.floor(Math.random() * gameBoardSize), col: Math.floor(Math.random() * gameBoardSize)}) 
   }  
 //#endregion 
 
@@ -194,7 +194,7 @@ export const Board = () => {
   }  
 
   const isWallHit = () => {
-    return snakeHead.row < 0 || snakeHead.col < 0 || snakeHead.row > gameHeight || snakeHead.col > gameWidth
+    return snakeHead.row < 0 || snakeHead.col < 0 || snakeHead.row > gameBoardSize || snakeHead.col > gameBoardSize
   }
 
   const isTailHit = () => {
@@ -238,7 +238,7 @@ export const Board = () => {
       setScore(score + 100)      
       //Winning condition snake tail filling all board cell 
       //-2 to account for snake head and snakeTail state not being updated until next render
-      if(snakeTail.length === (gameWidth * gameHeight - 2)){
+      if(snakeTail.length === (gameBoardSize * gameBoardSize - 2)){
         stopSnake()
         setWin(true)
       }
@@ -297,6 +297,14 @@ export const Board = () => {
       setPauseSnakeVelocity({rowV: snakeVelocity.rowV, colV: snakeVelocity.colV})
     }
     setPause(!pause)
+  }  
+
+  const drawPopupButton = () => {
+    let PopupReturn = PopupWindow(gameBoardSize)
+    if (typeof(PopupReturn[1]) === 'number'){
+      // setGameBoardSize(PopupReturn[1])
+    }
+    return (PopupReturn[0])
   }
 
   const drawButtons = () => {
@@ -308,6 +316,7 @@ export const Board = () => {
         <button className='button' onClick={() => setReset(true)}>
           Reset
         </button>
+        {drawPopupButton()}
       </div>
     )
   }
