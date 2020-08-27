@@ -1,8 +1,21 @@
 /* variables */
+//size variable
 $boardSize: 500px;
-$scoreBoardHeight: $boardSize/10;
-$buttonBoardHeight: $boardSize/10;
+$scoreBoardHeight: 50px;
+$buttonBoardHeight: 50px;
 $cellSize: 10px;
+
+// color variable
+$boardColor:  rgb(228, 228, 228);
+$borderColor: #aaaaaa ;
+$extraBoardColor: $borderColor;
+$snakeHeadColor: rgb(16, 128, 109);
+$snakeTailColor: rgb(6, 204, 178);
+$foodColor: rgb(151, 1, 1);
+$scoreColor: $snakeTailColor;
+$lostColor: $foodColor;
+$winColor: $snakeTailColor;
+$buttonHoverColor: $snakeTailColor;
 
 .game-board{
     background-color: rgba(255, 255, 255, 0.9);
@@ -12,17 +25,19 @@ $cellSize: 10px;
 }
 
 .score-board{
-    background-color: black;
-    color: yellow;
+    background-color: $extraBoardColor;
+    color: $scoreColor;
     width: $boardSize;
     height: $scoreBoardHeight;
     display: table-cell;
     text-align: center;
     vertical-align: middle;
+    text-shadow: 2px 2px $snakeHeadColor;
+    font-size: 30px;
 }
 
 .snake-board-background{
-    background-color: rgb(190, 190, 190); 
+    background-color:$boardColor;
     width: $boardSize; 
     height: $boardSize; 
     display: grid; 
@@ -34,7 +49,16 @@ $cellSize: 10px;
 .board-lost{
     width: $boardSize;
     height: $boardSize;
-    color: rgb(122, 122, 100);
+    color: $lostColor;
+    text-align: center;
+    padding-top: $boardSize/10*4;
+    font-size: $boardSize/10;
+}
+
+.board-win{
+    width: $boardSize;
+    height: $boardSize;
+    color: $winColor;
     text-align: center;
     padding-top: $boardSize/10*4;
     font-size: $boardSize/10;
@@ -44,35 +68,43 @@ $cellSize: 10px;
     // background-color: grey;
     width: $cellSize;
     height: $cellSize;
-    border: #aaaaaa .5px solid
+    border:$borderColor .5px solid
 }
 
 .snake-head{
-    background-color: rgb(16, 128, 109);
+    background-color: $snakeHeadColor;
     width: $cellSize;
     height: $cellSize;
 }
 
 .snake-tail{
-    background-color: rgb(6, 204, 178);    
+    background-color: $snakeTailColor;    
     width: $cellSize;
     height: $cellSize;
 }
 
 .food{
-    background-color: rgb(151, 1, 1);
+    background-color: $foodColor;
     width: $cellSize;
     height: $cellSize;
 }
 
 .button-board{
-    background-color: black;
+    background-color: $extraBoardColor;
     width: $boardSize;
     height: $buttonBoardHeight;
     display: table-cell;
     vertical-align: middle;
     text-align: center;
 }
+
 .button{
+    :hover{
+        background-color: $buttonHoverColor;
+    }
     margin: $buttonBoardHeight/5;
+}
+
+.button:hover{
+    background-color: $buttonHoverColor;
 }

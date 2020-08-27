@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import './styles.scss';
+import './style/styles.scss';
 import Board from './board';
 
 ReactDOM.render(<Board />, document.getElementById('root'));

@@ -36,6 +36,7 @@ export const Board = () => {
   const[snakeDirection, setSnakeDirection] = useState<Direction>(Direction.right)
   const[tickInterval, setTickInterval] = useState<number>(300)  
   const[pauseSnakeVelocity, setPauseSnakeVelocity] = useState<Velocity>({rowV: 0, colV: 0})
+  const[win, setWin] = useState<boolean>(false)
 
   useEffect(() => {
     if(reset){
@@ -81,6 +82,7 @@ export const Board = () => {
     setSnakeDirection(Direction.right)
     setTickInterval(300)
     setPauseSnakeVelocity({rowV:0, colV: 0})
+    setWin(false)
   }
     
 //#region Board Setup
@@ -199,6 +201,10 @@ export const Board = () => {
     return snakeTail.find((tail) => {return isObjectInCell(tail, snakeHead.row, snakeHead.col)})
   }
 
+  const stopSnake = () => {
+    setSnakeVelocity({rowV: 0, colV: 0})
+  }
+
   const moveSnake = () => {
     if (snakeVelocity.rowV !== 0 || snakeVelocity.colV !== 0){
       //Move the tail following the head
@@ -229,19 +235,29 @@ export const Board = () => {
 
   const gameLogic = () => {
     if (isFoodEaten()){     
-      placeFood()
-      setScore(score + 100)
+      setScore(score + 100)      
+      //Winning condition snake tail filling all board cell 
+      //-2 to account for snake head and snakeTail state not being updated until next render
+      if(snakeTail.length === (gameWidth * gameHeight - 2)){
+        stopSnake()
+        setWin(true)
+      }
+      else{        
+        placeFood()
+      }
     }
     else if (isWallHit()){
       console.log('You hit the wall')
+      stopSnake()
       setLost(true)
     }
     else if (isTailHit()){
       console.log('You hit the tail')
+      stopSnake()
       setLost(true)
     }
     else if (pause){
-      setSnakeVelocity({rowV: 0, colV: 0})
+      stopSnake()
     }
   }
 //#endregion
@@ -250,7 +266,7 @@ export const Board = () => {
   const drawSnakeBoard = () => {
     return (
       <div className='snake-board-background'>
-        { lost === false ? grid && drawGrid() : drawLost()}
+        { lost === false ? (win === false ? grid && drawGrid(): drawWin()) : drawLost()}
       </div>
     )  
   }
@@ -259,9 +275,13 @@ export const Board = () => {
     return <div className='board-lost'>Game Lost</div>
   }
 
+  const drawWin = () => {
+    return <div className='board-win'>You Won!</div>
+  }
+
   const drawScoreBoard = () => {
     return (
-      <div className='score-board'>{`Score: ${score}`}</div>
+      <div className='score-board'>{`SCORE: ${score}`}</div>
     )
   }
 
@@ -293,7 +313,7 @@ export const Board = () => {
   }
 //#endregion
  
-  return (    
+  return (        
     <div className='game-board'>
       {drawScoreBoard()} 
       {drawSnakeBoard()}
